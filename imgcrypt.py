@@ -62,7 +62,7 @@ def reshape_and_save(bytes, width, height, file_name, iv=None, salt=None):
     :param salt: salt used with PBKDF2 for key derivation
     """
     from_bytes = np.frombuffer(bytes, dtype=np.uint8)
-    reshaped = np.reshape(from_bytes, (width, height, 3))
+    reshaped = np.reshape(from_bytes, (height, width, 3))
     reshaped_img = Image.fromarray(reshaped)
 
     # If salt/iv are present, write EXIF data
