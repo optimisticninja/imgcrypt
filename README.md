@@ -22,6 +22,12 @@ The salt and IV are stored in the `User Comment` EXIF tag and read out/utilized 
 
 ![](examples/decrypted.png)
 
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ```
