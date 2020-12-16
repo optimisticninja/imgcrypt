@@ -83,22 +83,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AES encrypt image")
     parser.add_argument("-e", "--encrypt", help="encrypt image")
     parser.add_argument("-d", "--decrypt", help="decrypt image")
-    parser.add_argument("-p", "--password", help="password for encryption/decryption")
-    parser.add_argument("-o", "--output-file", help="output file")
+    parser.add_argument("-p", "--password", help="password for encryption/decryption", required=True)
+    parser.add_argument("-o", "--output-file", help="output file", required=True)
     argparse_namespace = parser.parse_args()
 
     if not argparse_namespace.encrypt and not argparse_namespace.decrypt:
-        parser.print_help(stderr)
-        parser.exit()
+        parser.exit("ERROR: select encryption or decryption")
     if argparse_namespace.encrypt and argparse_namespace.decrypt:
-        parser.print_help(stderr)
-        parser.exit("can't encrypt and decrypt simultaneously")
-    if not argparse_namespace.password:
-        parser.print_help(stderr)
-        parser.exit("please provide password")
-    if not argparse_namespace.output_file:
-        parser.print_help(stderr)
-        parser.exit("please provide output file")
+        parser.exit("ERROR: can't encrypt and decrypt simultaneously")
     if argparse_namespace.encrypt:
         if not os.path.isfile(argparse_namespace.encrypt):
             parser.error("file does not exist")
