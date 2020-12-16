@@ -70,7 +70,7 @@ def reshape_and_save(bytes, width, height, file_name, iv=None, salt=None):
         ifd = ImageFileDirectory_v2()
         iv_hex = binascii.hexlify(iv).decode('utf-8')
         salt_hex = binascii.hexlify(salt).decode('utf-8')
-        ifd[_TAGS_r["UserComment"]] = u"{} {}".format(iv_hex, salt_hex)
+        ifd[_TAGS_r["UserComment"]] = u"{}{}".format(iv_hex, salt_hex)
         out = BytesIO()
         ifd.save(out)
         exif_bytes = b"Exif\x00\x00" + out.getvalue()
@@ -116,9 +116,9 @@ if __name__ == "__main__":
             img = Image.open(argparse_namespace.decrypt)
             width, height = img.size
             exif = img._getexif()
-            iv_salt = exif[_TAGS_r["UserComment"]].split()
-            iv = binascii.unhexlify(iv_salt[0].strip())
-            salt = binascii.unhexlify(iv_salt[1])
+            iv_salt = binascii.unhexlify(exif[_TAGS_r["UserComment"]])
+            iv = iv_salt[:AES.block_size]
+            salt = iv_salt[AES.block_size:]
             img_data = np.asarray(img)
             img_data_flattened = img_data.flatten()
             decrypted = decrypt(argparse_namespace.password, iv, salt, img_data_flattened.tobytes())
