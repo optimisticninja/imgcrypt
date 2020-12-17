@@ -4,7 +4,6 @@ import argparse
 import binascii
 import os
 from io import BytesIO
-from sys import stderr
 
 import numpy as np
 from Crypto import Random
@@ -88,12 +87,12 @@ if __name__ == "__main__":
     argparse_namespace = parser.parse_args()
 
     if not argparse_namespace.encrypt and not argparse_namespace.decrypt:
-        parser.exit("ERROR: select encryption or decryption")
+        parser.exit(-1, "ERROR: select encryption or decryption")
     if argparse_namespace.encrypt and argparse_namespace.decrypt:
-        parser.exit("ERROR: can't encrypt and decrypt simultaneously")
+        parser.exit(-1, "ERROR: can't encrypt and decrypt simultaneously")
     if argparse_namespace.encrypt:
         if not os.path.isfile(argparse_namespace.encrypt):
-            parser.error("file does not exist")
+            parser.exit(-1, "ERROR: file '{}' does not exist".format(argparse_namespace.encrypt))
         else:
             img = Image.open(argparse_namespace.encrypt)
             width, height = img.size
@@ -103,7 +102,7 @@ if __name__ == "__main__":
             reshape_and_save(encrypted, width, height, argparse_namespace.output_file, iv, salt)
     if argparse_namespace.decrypt:
         if not os.path.isfile(argparse_namespace.decrypt):
-            parser.error("file does not exist")
+            parser.exit(-1, "ERROR: file '{}' does not exist".format(argparse_namespace.decrypt))
         else:
             img = Image.open(argparse_namespace.decrypt)
             width, height = img.size
